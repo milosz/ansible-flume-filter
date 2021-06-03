@@ -1,0 +1,23 @@
+- hosts: localhost
+  vars:
+    flume_config:
+      agent:
+        sources:
+          seqGenSrc:
+            type: seq
+            channels: memoryChannel
+        channels:
+          memoryChannel:
+            type: memory
+            capacity: 100
+        sinks:
+          loggerSink:
+            type: logger
+            channel: memoryChannel
+
+  tasks:
+    - name: Parse and display configuration template
+      debug:
+        msg: "{{ rendered_flume_template.split('\n') }}"
+      vars:
+        rendered_flume_template: "{{ lookup('template', './template.j2', trim_blocks=True) }}"
